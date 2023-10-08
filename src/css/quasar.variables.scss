@@ -1,0 +1,71 @@
+// Quasar SCSS (& Sass) Variables
+// --------------------------------------------------
+// To customize the look and feel of this app, you can override
+// the Sass/SCSS variables found in Quasar's source Sass/SCSS files.
+
+// Check documentation for full list of Quasar variables
+
+// Your own variables (that are declared here) and Quasar's own
+// ones will be available out of the box in your .vue/.scss/.sass files
+
+// It's highly recommended to change the default colors
+// to match your app's branding.
+// Tip: Use the "Theme Builder" on Quasar's documentation website.
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;700;800&family=Scheherazade+New&display=swap');
+$primary: #000000;
+// $primary: #1976d2;
+// $secondary: #26a69a;
+
+$secondary: #424242;
+$accent: #9c27b0;
+
+$dark: #1d1d1d;
+$dark-page: #121212;
+
+$positive: #21ba45;
+$negative: #c10015;
+$info: #31ccec;
+$warning: #f2c037;
+
+html,
+body {
+  overflow-x: hidden;
+}
+.container {
+  /* Default margin for desktop (10% on each side) */
+  margin-left: 16%;
+  margin-right: 16%;
+}
+
+.indexContainer {
+  /* Default margin for desktop (10% on each side) */
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+.dialog-container {
+  width: 50vw;
+}
+
+.custom-avatar {
+  border: 2px solid black; /* Add a black border around the avatar */
+}
+/* Use Quasar's breakpoint classes to override the margins for smaller screens */
+@media (max-width: 768px) {
+  .container {
+    /* Margin for smaller screens (2% on each side) */
+    margin-left: 2%;
+    margin-right: 2%;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .indexContainer {
+    /* Default margin for desktop (10% on each side) */
+    margin-left: 2%;
+    margin-right: 2%;
+  }
+
+  .dialog-container {
+    width: 80vw;
+  }
+}
