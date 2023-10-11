@@ -179,7 +179,7 @@ const metaData = {
   // sets document title
   title: '',
   // optional; sets final title as "Index Page - My Website", useful for multiple level meta
-  titleTemplate: (title) => `${title} - Mizomade`,
+  titleTemplate: (title) => `${title}-${localData.data.author}`,
 
   // meta tags
   meta: {
@@ -194,7 +194,7 @@ const metaData = {
       property: 'og:title',
       // optional; similar to titleTemplate, but allows templating with other meta properties
       template(ogTitle) {
-        return `${ogTitle} - My Website`;
+        return `${ogTitle}-${localData.data.author}`;
       },
     },
   },

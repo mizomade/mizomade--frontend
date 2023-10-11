@@ -87,7 +87,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: '/account/', // Parent route for authenticated routes
-        // component: () => import('layouts/MainLayout.vue'),
+        component: () => import('layouts/MainLayout.vue'),
         beforeEnter: (to, from, next) => {
           const userStore = useUserStore();
           // Apply authentication check at the parent route level
