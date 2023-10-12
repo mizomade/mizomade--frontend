@@ -87,7 +87,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: '/account/', // Parent route for authenticated routes
-        component: () => import('layouts/MainLayout.vue'),
+        // component: () => import('layouts/MainLayout.vue'),
         beforeEnter: (to, from, next) => {
           const userStore = useUserStore();
           // Apply authentication check at the parent route level
@@ -117,6 +117,11 @@ const routes: RouteRecordRaw[] = [
             name: 'EditProfile',
             path: 'edit-profile',
             component: () => import('pages/User/EditProfile.vue'),
+          },
+          {
+            name: 'Dashboard',
+            path: 'dashboard',
+            component: () => import('pages/User/Dashboard/DashboardPage.vue'),
           },
           {
             name: 'Settings',

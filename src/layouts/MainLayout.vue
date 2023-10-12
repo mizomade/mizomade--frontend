@@ -265,6 +265,7 @@ const goToSearch = (query) => {
 
 const goToDashboard = () => {
   // Implement your navigation logic for "Dashboard"
+  router.push({ name: 'Dashboard' });
 };
 
 const goToSettings = () => {

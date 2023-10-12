@@ -2,7 +2,7 @@
   <q-page class="flex flex-center bg-grey-2">
     <q-card class="q-pa-md shadow-2 my_card" bordered>
       <q-card-section class="text-center">
-        {{ phoneNotExist }}
+        <!-- {{ phoneNotExist }} -->
         <div class="text-grey-9 text-h5 text-weight-bold">Register</div>
         <div class="text-grey-8">Sign in below to access your account</div>
       </q-card-section>
@@ -36,15 +36,15 @@
             label="Phone Number"
             type="number"
             @input="checkphoneNotExist"
-            :error="phoneNotExist && focused2"
+            :error="!phoneNotExist"
             @focus="focused2 = true"
             @blur="focused2 = false"
           ></q-input>
-          <div v-if="phoneNotExist && focused2" class="text-red">
+          <div v-if="!phoneNotExist && focused2" class="text-red">
             Phone Number should not be blank and must not be used for another
             accounts
           </div>
-          <div v-else-if="!phoneNotExist" class="text-green">
+          <div v-else-if="phoneNotExist" class="text-green">
             Phone Number valid
           </div>
         </div>
@@ -140,6 +140,9 @@ const checkphoneNotExist = async () => {
   try {
     const response = await api.get(`user/phonenumbervalidation/${phone.value}`);
     phoneNotExist.value = response.data[1] === 0;
+    response.data[1] == 0
+      ? phoneNotExist.value == true
+      : phoneNotExist.value == false;
     console.log(response.data[1]);
   } catch (error) {
     console.error('Error checking phone validity:', error);

@@ -2,7 +2,6 @@
   <q-dialog
     v-if="dialogType == 'delete'"
     v-model="showDialog"
-    persistent
     transition-show="fade"
     transition-hide="fade"
   >
@@ -15,7 +14,7 @@
           label="Cancel"
           color="white"
           class="text-black text-weight-bold"
-          @click="showDialog == false"
+          @click="toggleDialog"
         />
         <q-btn
           label="Yes"
@@ -283,6 +282,10 @@ watch(
     loading.value = false; // Loading indicator can be turned off when data is available
   }
 );
+
+const toggleDialog = () => {
+  showDialog.value = !showDialog.value;
+};
 
 const loadPage = (username = route.params.user) => {
   // Make an API request to fetch posts for the given page

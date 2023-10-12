@@ -17,7 +17,18 @@
         >
           Cancel</q-btn
         >
-        <q-btn @click="next" class="text-weight-bold" color="black">
+        <q-spinner
+          color="primary"
+          size="3em"
+          :thickness="2"
+          v-if="uploadLoading"
+        />
+        <q-btn
+          @click="next"
+          class="text-weight-bold"
+          color="black"
+          :disable="uploadLoading"
+        >
           Save & Next</q-btn
         >
       </div>
@@ -50,6 +61,7 @@ const q = ref('Write a post to mizomade ... ');
 const loading = ref(true);
 // const ready = ref(false);
 const baseURL = api.defaults.baseURL;
+const uploadLoading = ref(false);
 
 // const ourQuill = computed(() => {
 //   return q.value;
@@ -186,6 +198,7 @@ const options = reactive({
 const next = () => {
   if (route.params.id) {
     // var delta = q.value.getContents();
+    uploadLoading.value = true;
 
     var delta = quill.getContents();
     const data = {

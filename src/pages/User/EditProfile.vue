@@ -49,12 +49,20 @@
         <label for="file-upload" class="bg-red">Change </label>
       </div>
 
-      <q-input
+      <!-- <q-input
         filled
         v-model="localData.userData.username"
         label="username"
         :dense="dense"
-      />
+      /> -->
+      <div>
+        <q-input
+          dense
+          outlined
+          v-model="localData.userData.username"
+          label="Username"
+        ></q-input>
+      </div>
       <q-input
         filled
         v-model="localData.userData.first_name"
@@ -123,7 +131,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, onMounted, reactive, computed } from 'vue';
+import { ref, onMounted, reactive, computed, watch } from 'vue';
 
 import { api } from './../../boot/axios';
 import axios from 'axios';
@@ -134,6 +142,7 @@ import { useQuasar } from 'quasar';
 
 const $q = useQuasar();
 const baseURL = api.defaults.baseURL;
+const isUsernameValid = ref(true);
 
 // var Delta = new Quill.import('delta');
 const userStore = useUserStore();
@@ -144,6 +153,8 @@ const loading = ref(true);
 const dense = ref(true);
 const previewImage = ref('');
 const previewCoverImage = ref('');
+const focused = ref(false);
+const initUsername = ref('');
 
 const authorization = computed(() => {
   return userStore.getAuthorization;
@@ -162,34 +173,57 @@ const localData = reactive({
   userData: userData,
   userProfile: userProfile,
 });
-
+const checkUsernameValidity = async () => {
+  if (initUsername.value == localData.data.username) {
+    isUsernameValid.value = true;
+  } else {
+    try {
+      const response = await api.get(
+        `user/profile/usernamevalidation/${localData.userData.username}`
+      );
+      isUsernameValid.value = response.data[0] === 1;
+    } catch (error) {
+      console.error('Error checking username validity:', error);
+      isUsernameValid.value = false;
+      $q.notify({
+        message: 'Username not valid',
+        color: 'red',
+      });
+    }
+  }
+};
+// watch(localData.userData.username, () => {
+//   isUsernameValid.value = null; // Reset validation state while typing
+//   checkUsernameValidity();
+// });
 const submit = () => {
   // const selectedImageFile = $refs.imagePicker.files[0];
+  checkUsernameValidity();
 
-  // if (route.params.id) {
-  const forms = new FormData();
-  forms.append('username', localData.userData.username);
-  forms.append('first_name', localData.userData.first_name);
+  if (isUsernameValid.value == true) {
+    const forms = new FormData();
+    forms.append('username', localData.userData.username);
+    forms.append('first_name', localData.userData.first_name);
 
-  forms.append('last_name', localData.userData.last_name);
-  forms.append('bio', localData.userProfile.bio);
+    forms.append('last_name', localData.userData.last_name);
+    forms.append('bio', localData.userProfile.bio);
 
-  axios({
-    method: 'put',
-    url: baseURL + '/user/profile/update/' + localData.userData.id,
-    data: forms,
-    headers: {
-      'Content-Type': 'multipart/form-data',
-      Accept: 'application/json, */*',
-      Authorization: authorization.value,
-    },
-  }).then(() => {
-    $q.notify({
-      message: 'Profile Updated!',
-      color: 'green',
+    axios({
+      method: 'put',
+      url: baseURL + '/user/profile/update/' + localData.userData.id,
+      data: forms,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Accept: 'application/json, */*',
+        Authorization: authorization.value,
+      },
+    }).then(() => {
+      $q.notify({
+        message: 'Profile Updated!',
+        color: 'green',
+      });
     });
-  });
-  // }
+  }
 };
 
 const submitcoverimage = (event) => {
@@ -272,6 +306,7 @@ onMounted(() => {
       // if (matchingCategory) {
       //   localData.data.category = matchingCategory.id;
       // }
+      initUsername.value = localData.data.username;
     });
   }
 });
