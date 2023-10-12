@@ -2,6 +2,7 @@
   <q-page class="flex flex-center bg-grey-2">
     <q-card class="q-pa-md shadow-2 my_card" bordered>
       <q-card-section class="text-center">
+        {{ phoneNotExist }}
         <div class="text-grey-9 text-h5 text-weight-bold">Register</div>
         <div class="text-grey-8">Sign in below to access your account</div>
       </q-card-section>
@@ -138,7 +139,8 @@ const checkUsernameValidity = async () => {
 const checkphoneNotExist = async () => {
   try {
     const response = await api.get(`user/phonenumbervalidation/${phone.value}`);
-    phoneNotExist.value = response.data[1] === 1;
+    phoneNotExist.value = response.data[1] === 0;
+    console.log(response.data[1]);
   } catch (error) {
     console.error('Error checking phone validity:', error);
     phoneNotExist.value = false;
