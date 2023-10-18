@@ -103,11 +103,11 @@
               <q-item-section> About </q-item-section>
             </q-item>
 
-            <q-item clickable v-ripple>
+            <!-- <q-item clickable v-ripple>
               <q-item-section> Guides </q-item-section>
-            </q-item>
+            </q-item> -->
 
-            <q-item clickable v-ripple @click="goToPost('mizomade-hman-dan')">
+            <q-item clickable v-ripple @click="goToPost('mizomade-hman-dan19')">
               <q-item-section> How to </q-item-section>
             </q-item>
           </q-list>

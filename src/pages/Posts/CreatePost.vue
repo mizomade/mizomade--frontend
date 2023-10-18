@@ -1,5 +1,9 @@
 <template>
   <q-page>
+    <q-dialog v-model="dialogVisible">
+      <q-spinner color="orange" size="3em" :thickness="2"></q-spinner>
+    </q-dialog>
+
     <div class="q-pa-md q-gutter-sm container">
       <!-- <QuillEditor v-model:value="state.content" :options="options" ref="q" />
     {{ ourQuill }} -->
@@ -56,6 +60,7 @@ const userStore = useUserStore();
 const route = useRoute();
 const router = useRouter();
 let quill = '';
+const dialogVisible = ref(false);
 
 const q = ref('Write a post to mizomade ... ');
 const loading = ref(true);
@@ -354,7 +359,9 @@ onMounted(() => {
       const file = input.files[0];
 
       if (file) {
-        insertText();
+        dialogVisible.value = true;
+
+        // insertText();
         // You can use a service or API to upload the image and get the URL.
         // Replace 'uploadImageUrl' with your actual image upload endpoint.
         const uploadImageUrl = baseURL + '/posts/imageupload/';
@@ -369,8 +376,10 @@ onMounted(() => {
         })
           .then((response) => response.json())
           .then((data) => {
-            deleteText();
-            const imageUrl = data.image; // Adjust this based on your API response.
+            // deleteText();
+            dialogVisible.value = false;
+
+            const imageUrl = data.url; // Adjust this based on your API response.
             const range = quill.getSelection();
             quill.insertEmbed(range.index, 'image', imageUrl);
           })

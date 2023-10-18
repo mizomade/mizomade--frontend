@@ -1,6 +1,10 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated class="bg-white" v-if="$q.screen.lg || $q.screen.md">
+    <q-header
+      elevated
+      class="bg-white"
+      v-if="$q.screen.lg || $q.screen.md || $q.screen.xl"
+    >
       <q-toolbar>
         <!-- <q-btn flat round dense icon="menu" class="q-mr-sm" /> -->
         <div
@@ -48,7 +52,7 @@
           />
           <div class="q-gutter-md">
             <q-avatar>
-              <img :src="localData.userProfile.profilephoto" alt="User" />
+              <q-img :src="localData.userProfile.profilephoto" alt="User" />
             </q-avatar>
 
             <q-menu anchor="bottom right">
@@ -140,7 +144,7 @@
 
           <div class="q-gutter-md">
             <q-avatar size="42px">
-              <img
+              <q-img
                 :src="localData.userProfile.profilephoto"
                 alt="User"
                 height="40px"

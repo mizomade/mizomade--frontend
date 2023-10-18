@@ -13,48 +13,20 @@
     >
       <p class="text-weight-bold text-h4 text-center">Edit Profile</p>
       <!-- <hr /> -->
-
-      <!-- <q-avatar>
-        <img :src="localData.userProfile.profilephoto" />
-      </q-avatar> -->
-
-      <span v-if="previewImage" class="text-center">
+      <div class="flex column justify-center items-center q-gutter-md">
         <q-avatar>
-          <img :src="previewImage" sizes="80px" />
+          <img :src="localData.userProfile.profilephoto" sizes="80px" />
         </q-avatar>
-        <br />
-
-        <input
-          id="file-uploadagain"
-          name="file-uploadagain"
-          type="file"
-          @change="updateprofilephoto"
-        />
-        <label for="file-uploadagain" class="">Change </label>
-      </span>
-      <div class="text-center" v-else>
-        <label class="text-h6 text-weight-bold"> Profile photo </label>
-        <br />
-        <q-avatar size="80px" class="q-my-md">
-          <img :src="localData.userProfile.profilephoto" />
-        </q-avatar>
-        <br />
-        <input
-          id="file-upload"
-          name="file-upload"
-          type="file"
-          class="sr-only"
-          @change="updateprofilephoto"
-        />
-        <label for="file-upload" class="bg-red">Change </label>
+        <image-cropper
+          v-if="apiProfilePhotoUrl"
+          @imagePath="updateImage"
+          :username="username"
+          :buttonLabel="profilePhotoLabel"
+          :apiUrl="apiProfilePhotoUrl"
+          :type="type1"
+        ></image-cropper>
       </div>
 
-      <!-- <q-input
-        filled
-        v-model="localData.userData.username"
-        label="username"
-        :dense="dense"
-      /> -->
       <div>
         <q-input
           dense
@@ -83,43 +55,27 @@
         :dense="dense"
       />
 
-      <div></div>
-
-      <div class="mb-2 w-auto lg:w-1/5" v-if="!previewCoverImage">
+      <div class="mb-2 w-auto lg:w-1/5">
         <label class="text-h6 text-weight-bold"> Cover photo </label>
-        <img
-          :src="localData.userProfile.coverphoto"
-          style="width: 100%; height: auto"
-        />
-
-        <input
-          id="file-upload"
-          name="file-upload"
-          type="file"
-          class="sr-only"
-          @change="submitcoverimage"
-        />
-      </div>
-      <span v-if="previewCoverImage" style="margin: 1rem 0">
-        <img :src="previewCoverImage" style="width: 100%; height: auto" />
-        <label
-          >Change
-          <input
-            id="file-uploadagain"
-            name="file-uploadagain"
-            type="file"
-            class="sr-only"
-            @change="submitcoverimage"
-            placeholder="Change"
+        <div class="flex column justify-center items-center q-gutter-md">
+          <img
+            :src="localData.userProfile.coverphoto"
+            style="width: 100%; height: auto"
           />
-        </label>
-      </span>
-      <!-- post: {{ localData.userProfile.coverphoto }} preview:{{
-        previewCoverImage
-      }} -->
+          <image-cropper
+            v-if="apiCoverPhotoUrl"
+            @imagePath="updateCoverImage"
+            :buttonLabel="coverPhotoLabel"
+            :apiUrl="apiCoverPhotoUrl"
+            :username="username"
+            :type="type2"
+            :stencilAspectRatio="1.4"
+          ></image-cropper>
+        </div>
+      </div>
 
       <div class="row justify-between">
-        <q-btn @click="draft" color="grey-8" class="text-weight-bold"
+        <q-btn @click="router.back()" color="grey-8" class="text-weight-bold"
           >Cancel</q-btn
         >
 
@@ -135,6 +91,7 @@ import { ref, onMounted, reactive, computed, watch } from 'vue';
 
 import { api } from './../../boot/axios';
 import axios from 'axios';
+import ImageCropper from 'src/components/ImageCropper.vue';
 
 import { useUserStore } from 'src/stores/user-store';
 import { useRoute, useRouter } from 'vue-router';
@@ -155,6 +112,9 @@ const previewImage = ref('');
 const previewCoverImage = ref('');
 const focused = ref(false);
 const initUsername = ref('');
+const profilePhoto = ref('');
+const type1 = 'profilephoto';
+const type2 = 'coverphoto';
 
 const authorization = computed(() => {
   return userStore.getAuthorization;
@@ -162,6 +122,10 @@ const authorization = computed(() => {
 
 const userData = computed(() => {
   return userStore.userData;
+});
+
+const username = computed(() => {
+  return userStore.getUsername;
 });
 
 const userProfile = computed(() => {
@@ -173,6 +137,14 @@ const localData = reactive({
   userData: userData,
   userProfile: userProfile,
 });
+const apiProfilePhotoUrl = computed(() => {
+  return '/user/profile/update/profilephoto/' + localData.userData.id;
+});
+const profilePhotoLabel = 'Change Photo';
+const apiCoverPhotoUrl = computed(() => {
+  return '/user/profile/update/coverphoto/' + localData.userData.id;
+});
+const coverPhotoLabel = 'Change Cover Photo';
 const checkUsernameValidity = async () => {
   if (initUsername.value == localData.data.username) {
     isUsernameValid.value = true;
@@ -196,6 +168,7 @@ const checkUsernameValidity = async () => {
 //   isUsernameValid.value = null; // Reset validation state while typing
 //   checkUsernameValidity();
 // });
+
 const submit = () => {
   // const selectedImageFile = $refs.imagePicker.files[0];
   checkUsernameValidity();
@@ -226,88 +199,13 @@ const submit = () => {
   }
 };
 
-const submitcoverimage = (event) => {
-  // console.log(event.target.files[0].name);
-  localData.userProfile.coverphoto = event.target.files[0];
-  // console.log(this.coverimage.name);
-  previewCoverImage.value = URL.createObjectURL(event.target.files[0]);
-  submitcoverimageAPI();
-};
-const submitcoverimageAPI = () => {
-  const form = new FormData();
-
-  localData.userProfile.coverphoto != previewCoverImage.value
-    ? form.append('coverphoto', localData.userProfile.coverphoto)
-    : null;
-  form.append('username', localData.userData.username);
-
-  api.put(
-    baseURL + '/user/profile/update/coverphoto/' + localData.userData.id,
-    form
-  );
+const updateImage = (newImageURL) => {
+  // console.log('URL', newImageURL);
+  localData.userProfile.profilephoto = newImageURL; // Update the displayed image with the new URL
 };
 
-const updateprofilephoto = (event) => {
-  // console.log(event.target.files[0].name);
-  localData.userProfile.profilephoto = event.target.files[0];
-  // console.log(this.coverimage.name);
-  previewImage.value = URL.createObjectURL(event.target.files[0]);
-  updateprofilephotoAPI();
+const updateCoverImage = (newImageURL) => {
+  console.log('URL', newImageURL);
+  localData.userProfile.coverphoto = newImageURL; // Update the displayed image with the new URL
 };
-
-const updateprofilephotoAPI = () => {
-  const form = new FormData();
-  localData.userProfile.profilephoto != previewImage.value
-    ? form.append('profilephoto', localData.userProfile.profilephoto)
-    : null;
-  form.append('username', localData.userData.username);
-
-  api.put(
-    baseURL + '/user/profile/update/profilephoto/' + localData.userData.id,
-    form
-  );
-};
-//  const updatecoverphoto =(event)=> {
-//       const data = new FormData();
-
-//       data.append("coverphoto", event.target.files[0]);
-//       data.append("username", this.store.getUserName);
-
-//       api.put(baseURL
-//             ,"/user/profile/update/coverphoto/" +
-//             localData.userData.id,
-//           data,
-
-//         )
-//         .then(() => {
-//           // console.log("image upload response > ", response);
-//           this.usermedia.coverphoto = URL.createObjectURL(
-//             event.target.files[0]
-//           );
-//            this.$root.$toast.success("Cover photo Updated",{
-//             duration: 2000,
-//             position: 'bottom-center',
-//           });
-//         });
-//     },
-
-onMounted(() => {
-  // console.log(route.params.slug);
-  if (route.params.id) {
-    api.get('/drafts/' + route.params.id).then((res) => {
-      localData.data = res.data.post;
-      loading.value = false;
-      previewImage.value = res.data.post.coverimage;
-      // const categoryName = res.data.post.category; // Assuming 'category' is the category name received from the API
-      // const matchingCategory = categories.value.find(
-      //   (category) => category.name === categoryName
-      // );
-
-      // if (matchingCategory) {
-      //   localData.data.category = matchingCategory.id;
-      // }
-      initUsername.value = localData.data.username;
-    });
-  }
-});
 </script>

@@ -6,7 +6,8 @@
         <p class="bg-grey-2 q-pa-md border-rounded">
           Post Analytics Data Disclaimer: The data presented here is based on
           post analytics and may not include other non-updated information.
-          Please keep this in mind while interpreting the displayed data.
+          Please keep this in mind while interpreting the displayed data.The
+          actual data may take time to reflect
         </p>
       </q-card-title>
 
@@ -16,6 +17,7 @@
           :columns="columns"
           row-key="title"
           title="Post Analytics"
+          :loading="loading"
           flat
         >
           <!-- <template v-slot:header="props">
@@ -68,6 +70,8 @@ import { ref, onMounted } from 'vue';
 
 import { api } from 'src/boot/axios';
 const userPosts = ref([]);
+const loading = ref(true);
+
 const columns = [
   {
     name: 'title',
@@ -128,6 +132,7 @@ const fetchData = async () => {
     // const data = await response.json();
 
     // userPosts.value = data.user_posts_with_analytics;
+    loading.value = false;
   } catch (error) {
     console.error('Error fetching data:', error);
   }
