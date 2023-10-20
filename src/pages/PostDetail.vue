@@ -27,7 +27,7 @@
               ? 'text-h2 text-weight-bold'
               : 'text-h3 text-weight-bold'
           "
-          style="word-break: break-all"
+          style="word-break: normal"
         >
           <b>{{ localData.data.title }}</b>
         </p>

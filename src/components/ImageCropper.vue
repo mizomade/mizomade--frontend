@@ -63,6 +63,7 @@ import { ref, defineProps, defineEmits, onBeforeUnmount } from 'vue';
 import { useQuasar } from 'quasar';
 import { api } from 'src/boot/axios';
 import { Cropper } from 'vue-advanced-cropper';
+import axios from 'src/boot/axios';
 import 'vue-advanced-cropper/dist/style.css';
 const $q = useQuasar();
 const submitting = ref(false);
@@ -75,6 +76,8 @@ const props = defineProps({
   stencilAspectRatio: Number,
   username: String,
   buttonLabel: String,
+  methods: String,
+  authorization: String,
 }); // Add the props
 const emits = defineEmits(['imagePath']);
 
@@ -143,9 +146,25 @@ const crop = async () => {
   if (props.type == 'coverphoto') {
     form.append('coverphoto', blob, 'coverphoto.jpg');
   }
+  if (props.type == 'coverimage') {
+    form.append('coverimage', blob, 'coverimage.jpg');
+  }
   try {
-    const response = await api.put(baseURL + props.apiUrl, form);
+    // const response =
+    // props.methods == 'POST'
+    //   ? await axios({
+    //       method: 'POST',
+    //       url: baseURL + props.apiUrl,
+    //       data: form,
 
+    //       headers: {
+    //         'Content-Type': 'multipart/form-data',
+    //         Accept: 'application/json, */*',
+    //         Authorization: authorization.value,
+    //       },
+    //     })
+    //   : await api.put(baseURL + props.apiUrl, form);
+    const response = await api.put(baseURL + props.apiUrl, form);
     // Handle the response from the server
     if (response.status === 200) {
       // Successfully uploaded

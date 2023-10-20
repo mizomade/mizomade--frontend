@@ -14,10 +14,7 @@
           border-top-left-radius: 4%;
         "
       />
-      <div
-        class="text-h6 text-weight-bold q-pa-md"
-        style="word-break: break-all"
-      >
+      <div class="text-h6 text-weight-bold q-pa-md" style="word-break: normal">
         {{ truncate }}
       </div>
     </div>

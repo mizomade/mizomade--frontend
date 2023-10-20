@@ -391,6 +391,7 @@ onMounted(() => {
   });
 
   if (route.params.id) {
+    dialogVisible.value = true;
     api.get('/drafts/' + route.params.id).then((res) => {
       console.log(res);
       localData.data = res.data.post;
@@ -404,6 +405,7 @@ onMounted(() => {
       quill.setContents(formattedContents, 'api');
 
       loading.value = false;
+      dialogVisible.value = false;
     });
   }
 });

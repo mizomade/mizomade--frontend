@@ -33,6 +33,7 @@
           outlined
           v-model="localData.userData.username"
           label="Username"
+          @update:modelValue="checkUsernameValidity"
         ></q-input>
       </div>
       <q-input
@@ -153,7 +154,21 @@ const checkUsernameValidity = async () => {
       const response = await api.get(
         `user/profile/usernamevalidation/${localData.userData.username}`
       );
-      isUsernameValid.value = response.data[0] === 1;
+      // isUsernameValid.value = response.data[0] === 1;
+      if (response.data[0] == 1) {
+        isUsernameValid.value = true;
+        $q.notify({
+          message: 'Username  valid',
+          color: 'green',
+        });
+      }
+      if (response.data[0] == 0) {
+        isUsernameValid.value = false;
+        $q.notify({
+          message: 'Username  taken',
+          color: 'red',
+        });
+      }
     } catch (error) {
       console.error('Error checking username validity:', error);
       isUsernameValid.value = false;
@@ -195,6 +210,8 @@ const submit = () => {
         message: 'Profile Updated!',
         color: 'green',
       });
+      userStore.getProfile();
+      // router.back(-1);
     });
   }
 };
