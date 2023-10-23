@@ -120,8 +120,33 @@
           @click="router.push('/')"
         />
         <!-- <p>Mizomade.com</p> -->
-
+        <q-icon
+          name="search"
+          class="search-icon q-px-md"
+          @click="expandSearch"
+          color="black"
+          size="30px"
+          v-if="!searchExpanded"
+        />
         <q-input
+          v-if="searchExpanded"
+          dense
+          outlined
+          v-model="query"
+          placeholder="Search..."
+          class="q-mr-xs"
+          @keyup.enter="goToSearch(query)"
+          ref="searchInput"
+        >
+          <template v-slot:prepend>
+            <q-icon name="search" />
+          </template>
+          <template v-slot:append>
+            <q-icon v-if="searchExpanded" name="close" @click="closeSearch" />
+          </template>
+        </q-input>
+
+        <!-- <q-input
           dense
           outlined
           v-model="query"
@@ -131,7 +156,7 @@
           :expand="searchExpanded"
           @keyup.enter="goToSearch(query)"
           style="width: 40%"
-        />
+        /> -->
         <q-space />
         <!-- <q-btn flat round dense icon="search" class="q-mr-xs" /> -->
         <div v-if="isAuthenticated" class="row">
@@ -140,6 +165,7 @@
             class="text-weight-bold q-mx-xs"
             color="black"
             @click="create"
+            v-if="!searchExpanded"
           />
 
           <div class="q-gutter-md">
@@ -181,7 +207,7 @@
 </template>
 
 <script setup>
-import { ref, computed, reactive, watch } from 'vue';
+import { ref, computed, reactive, watch, nextTick } from 'vue';
 
 import { api } from 'src/boot/axios';
 import axios from 'axios';
@@ -195,6 +221,7 @@ const $q = useQuasar();
 const userStore = useUserStore();
 const route = useRoute();
 const router = useRouter();
+const searchInput = ref();
 
 const searchExpanded = ref(false);
 const showCategories = ref(false);
@@ -241,8 +268,28 @@ function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
 
+// const expandSearch = () => {
+//   searchExpanded.value = !searchExpanded.value;
+// };
 const expandSearch = () => {
-  searchExpanded.value = !searchExpanded.value;
+  searchExpanded.value = true;
+  // searchInput.value.focus();
+
+  nextTick(() => {
+    // $ref.searchInput.focus();
+    searchInput.value.focus();
+  });
+};
+
+const closeSearch = () => {
+  query.value = '';
+  nextTick(() => {
+    // $ref.searchInput.focus();
+    searchInput.value.blur();
+    searchExpanded.value = false;
+  });
+
+  searchInput.value.blur();
 };
 
 const toggleCategories = () => {

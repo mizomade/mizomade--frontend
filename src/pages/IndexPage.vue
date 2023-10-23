@@ -3,8 +3,8 @@
     <div class="flex q-gutter-md justify-center">
       <div
         v-if="loading"
-        class="q-gutter-lg"
-        :class="$q.screen.width >= 100 ? 'col-12 ' : 'col-3'"
+        class="q-gutter-md flex row flex-wrap justify-center"
+        :class="$q.screen.width >= 100 ? 'col-12' : 'col-3'"
       >
         <div v-for="index in 6" :key="index">
           <SkeletonPostCard />
@@ -26,19 +26,20 @@
           :slug="post.slug"
         ></post-card>
       </div>
-      <q-pagination
-        class="q-py-md self-end"
-        v-if="pagination.next || pagination.previous"
-        v-model="currentPage"
-        :totalPages="totalPages"
-        @update:model-value="loadPage"
-        :max="4"
-        direction-links
-      />
+
       <!-- Pagination -->
 
       <!-- {{ pagination }} -->
     </div>
+    <q-pagination
+      class="q-py-md self-center"
+      v-if="pagination.next || pagination.previous"
+      v-model="currentPage"
+      :totalPages="totalPages"
+      @update:model-value="loadPage"
+      :max="4"
+      direction-links
+    />
   </q-page>
 </template>
 

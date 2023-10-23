@@ -1,5 +1,5 @@
 <template>
-  <q-page class="q-px-xl q-py-md column justify-center indexContainer">
+  <q-page class="q-py-md column justify-center indexContainer">
     <div>
       <h4 class="text-center">
         Category :<b>{{ category }} </b>
@@ -21,7 +21,7 @@
         :class="$q.screen.width >= 100 ? 'col-12 ' : 'col-3'"
         v-for="post in posts"
         :key="post"
-        class="q-gutter-md"
+        class="q-gutter-md flex justify-center"
       >
         <post-card
           :cover-image="post.coverimage"
@@ -32,19 +32,20 @@
           :slug="post.slug"
         ></post-card>
       </div>
-      <q-pagination
-        class="q-py-md q-mx-auto"
-        v-if="pagination.next || pagination.previous"
-        v-model="currentPage"
-        :totalPages="totalPages"
-        @update:model-value="loadPage"
-        :max="4"
-        direction-links
-      />
+
       <!-- Pagination -->
 
       <!-- {{ pagination }} -->
     </div>
+    <q-pagination
+      class="q-py-md q-mx-auto"
+      v-if="pagination.next || pagination.previous"
+      v-model="currentPage"
+      :totalPages="totalPages"
+      @update:model-value="loadPage"
+      :max="4"
+      direction-links
+    />
   </q-page>
 </template>
 
@@ -95,8 +96,10 @@ onMounted(() => {
 watch(
   () => route.params.category,
   (newCategory) => {
+    loading.value = true;
     category.value = newCategory;
     loadPage(currentPage.value);
+    loading.value = false;
   }
 );
 </script>

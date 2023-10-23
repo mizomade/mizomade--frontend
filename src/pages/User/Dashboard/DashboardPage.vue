@@ -45,15 +45,15 @@
           <template v-slot:body="props">
             <q-tr :props="props">
               <q-td key="title">{{ props.row.title }}</q-td>
-              <q-td key="sessions" :class="getColorClass(props.row.sessions)">
+              <!-- <q-td key="sessions" :class="getColorClass(props.row.sessions)">
                 {{ props.row.sessions }}
-              </q-td>
+              </q-td> -->
               <q-td key="pageviews" :class="getColorClass(props.row.pageviews)">
                 {{ props.row.pageviews }}
               </q-td>
-              <q-td key="avg_session_duration">
+              <!-- <q-td key="avg_session_duration">
                 {{ props.row.avg_session_duration || 'N/A' }}
-              </q-td>
+              </q-td> -->
               <q-td key="users" :class="getColorClass(props.row.users)">
                 {{ props.row.users }}
               </q-td>
@@ -81,14 +81,14 @@ const columns = [
     field: 'title',
     sortable: true,
   },
-  {
-    name: 'sessions',
-    required: true,
-    label: 'Sessions',
-    align: 'left',
-    field: 'sessions',
-    sortable: true,
-  },
+  // {
+  //   name: 'sessions',
+  //   required: true,
+  //   label: 'Sessions',
+  //   align: 'left',
+  //   field: 'sessions',
+  //   sortable: true,
+  // },
   {
     name: 'pageviews',
     required: true,
@@ -97,14 +97,14 @@ const columns = [
     field: 'pageviews',
     sortable: true,
   },
-  {
-    name: 'avg_session_duration',
-    required: true,
-    label: 'Avg. Session Duration',
-    align: 'left',
-    field: 'avg_session_duration',
-    sortable: true,
-  },
+  // {
+  //   name: 'avg_session_duration',
+  //   required: true,
+  //   label: 'Avg. Session Duration',
+  //   align: 'left',
+  //   field: 'avg_session_duration',
+  //   sortable: true,
+  // },
   {
     name: 'users',
     required: true,

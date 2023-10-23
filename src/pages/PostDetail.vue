@@ -115,6 +115,14 @@
             </q-chip>
           </div>
         </div>
+        <div>
+          <div v-if="canLoadAds">
+            <FaknaBanner
+              :faknaData="localData.faknaData"
+              v-if="localData.faknaData"
+            />
+          </div>
+        </div>
 
         <q-separator />
         <h4>Related</h4>
@@ -174,6 +182,7 @@ const userStore = useUserStore();
 import { useQuasar } from 'quasar';
 import StepLoader from 'src/components/StepLoader.vue';
 import ShareButton from 'src/components/Actions/ShareButton.vue';
+import FaknaBanner from 'src/components/Fakna/FaknaBanner.vue';
 
 const metaData = {
   // sets document title
@@ -211,7 +220,7 @@ const metaData = {
   script: {
     ldJson: {
       type: 'application/ld+json',
-      innerHTML: `{ "@context": "http://schema.org" }`,
+      innerHTML: '{ "@context": "http://schema.org" }',
     },
   },
 
@@ -242,6 +251,7 @@ const router = useRouter();
 
 const q = ref('mizomade');
 const loading = ref(true);
+const canLoadAds = ref(true);
 
 const ready = ref(false);
 
@@ -249,6 +259,7 @@ const localData = reactive({
   data: {},
   related: {},
   selectedData: {},
+  faknaData: {},
 });
 const options = reactive({
   // debug: 'info',
@@ -276,7 +287,23 @@ onMounted(async () => {
     }
   );
   await loadPostData();
+  try {
+    await loadfaknaData();
+  } catch {
+    console.log('ERROR');
+  }
 });
+
+const loadfaknaData = async () => {
+  try {
+    const response = await api.get('/fakna/get-fakna/?fakna_type=Banner');
+    localData.faknaData = response.data[0];
+    canLoadAds.value = true;
+  } catch (error) {
+    console.error('ADS fetching data:', error);
+    canLoadAds.value = false;
+  }
+};
 
 const loadPostData = async (slug = route.params.slug) => {
   try {

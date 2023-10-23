@@ -14,6 +14,7 @@
           v-model="password"
           type="password"
           label="Password"
+          @keyup.enter="login"
         ></q-input>
       </q-card-section>
       <q-card-section>
@@ -27,6 +28,9 @@
           class="full-width"
           @click="login"
         ></q-btn>
+      </q-card-section>
+      <q-card-section class="text-center">
+        <q-spinner v-if="loading" color="primary" size="3em" :thickness="2" />
       </q-card-section>
       <q-card-section class="text-center q-pt-none">
         <div class="text-grey-8">
@@ -57,6 +61,7 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 const $q = useQuasar();
+const loading = ref(false);
 
 const userStore = useUserStore();
 const isAuthenticated = computed(() => userStore.isAuthenticated);
@@ -65,8 +70,10 @@ const username = ref('');
 const password = ref('');
 
 const login = async () => {
+  loading.value = true;
   // Call the login action from the user store
   await userStore.login(username.value, password.value);
+
   if (isAuthenticated.value) {
     // $q.notify({
     //   message: 'Login Successful',
@@ -74,6 +81,8 @@ const login = async () => {
     //   color: 'green',
     // });
     router.push('/');
+  } else {
+    loading.value = false;
   }
 };
 </script>

@@ -63,8 +63,8 @@ formattedDate.value = date.formatDate(props.postDate, 'DD-MMM-YYYY');
 // const authorImageLink = ref();
 // authorImageLink.value = mediaPath + 'static/' + props.authorimage;
 const truncate = computed(() => {
-  if (props.title.length > 60) {
-    return props.title.substring(0, 60) + '...';
+  if (props.title.length > 55) {
+    return props.title.substring(0, 55) + '...';
   } else return props.title;
 });
 

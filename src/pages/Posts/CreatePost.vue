@@ -146,7 +146,7 @@ const options = reactive({
       [{ color: [] }, { background: [] }],
       [{ align: [] }],
       ['clean'],
-      ['link', 'image'],
+      ['link', 'image', 'video'],
       // [
       //   {
       //     image: handleImageInsertion,
